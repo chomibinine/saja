@@ -851,6 +851,18 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
+document.getElementById("confirm-add-user-btn").onclick = function () {
+    const newName = document.getElementById("new-username-input").value.trim();
+    if (newName.length > 0 && newName.length <= 8) {
+        addNewUser(newName);
+        document.getElementById("add-user-prompt").style.display = "none";
+    }
+};
+document.getElementById("cancel-add-user-btn").onclick = function () {
+    document.getElementById("add-user-prompt").style.display = "none";
+};
+
 </script>
 </div>
 <div id="start-screen">
