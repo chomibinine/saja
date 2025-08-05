@@ -851,6 +851,22 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
+document.getElementById("confirm-add-user-btn").onclick = function () {
+    const newName = document.getElementById("new-username-input").value.trim();
+    if (newName.length > 0 && newName.length <= 8) {
+        addNewUser(newName);
+        document.getElementById("add-user-prompt").style.display = "none";
+    }
+};
+document.getElementById("cancel-add-user-btn").onclick = function () {
+    document.getElementById("add-user-prompt").style.display = "none";
+};
+
+
+document.getElementById("add-user-btn").onclick = function () {
+    document.getElementById("add-user-prompt").style.display = "block";
+};
 </script>
 </div>
 <div id="start-screen">
@@ -1047,7 +1063,7 @@ if (!autoAdvance && comboCount > 1) {
       "농가성진(弄假成眞)",
       "낙화유수(落花流水)"
     ],
-    "hint": "呵(꾸짖을 가 웃음소리 가) 웃다의 의성어 呵呵 하하 웃는 웃음소리 大(큰 대) 크다 笑(웃을 소) 웃다"
+    "hint": "呵(꾸짖을 가) 웃다의 의성어 呵呵 하하 웃는 웃음소리 大(큰 대) 크다 笑(웃을 소) 웃다"
   },
   {
     "id": 2,
@@ -6129,7 +6145,32 @@ function startQuiz() {
     showQuestion();
 }
         function startTimer() { timeLeft = 15; timerDisplay.textContent = timeLeft; timerDisplay.classList.remove('hidden'); clearInterval(timer); timer = setInterval(() => { timeLeft--; timerDisplay.textContent = timeLeft; if (timeLeft <= 0) { clearInterval(timer); handleTimeUp(); } }, 1000); }
-        function showQuestion() { resetState(); const currentQuestion = currentQuizData[currentQuestionIndex]; let questionHTML = `Q${currentQuestionIndex + 1}. `; let options = []; if (showWordAsQuestion) { questionHTML += `<strong>${currentQuestion.answer}</strong>`; const distractors = fullQuizData.filter(q => q.id !== currentQuestion.id); options = distractors.sort(() => 0.5 - Math.random()).slice(0, 3).map(q => q.question); options.push(currentQuestion.question); } else { questionHTML += currentQuestion.question; options = [...currentQuestion.options]; } questionText.innerHTML = `${questionHTML} <button id='pronounce-btn' style='margin-left:10px; background:none; border:none; font-size:1.2rem; cursor:pointer;'>🔊</button>`; const shuffledOptions = options.sort(() => 0.5 - Math.random()); optionButtons.forEach((button, index) => { button.innerText = shuffledOptions[index]; button.dataset.answer = shuffledOptions[index]; }); hintBtn.classList.remove('hidden'); updateProgressBar(); startTimer(); setTimeout(() => { const btn = document.getElementById('pronounce-btn'); if (btn) btn.onclick = () => speakWord(currentQuestion.answer); }, 0); }
+        
+function showQuestion() {
+    resetState();
+    const currentQuestion = currentQuizData[currentQuestionIndex];
+    let questionHTML = `Q${currentQuestionIndex + 1}. `;
+    let options = [];
+    if (showWordAsQuestion) {
+        questionHTML += `<strong>${currentQuestion.answer}</strong>`;
+        const distractors = fullQuizData.filter(q => q.id !== currentQuestion.id);
+        options = distractors.sort(() => 0.5 - Math.random()).slice(0, 3).map(q => q.question);
+        options.push(currentQuestion.question);
+    } else {
+        questionHTML += currentQuestion.question;
+        options = [...currentQuestion.options];
+    }
+    questionText.innerHTML = questionHTML;
+    const shuffledOptions = options.sort(() => 0.5 - Math.random());
+    optionButtons.forEach((button, index) => {
+        button.innerText = shuffledOptions[index];
+        button.dataset.answer = shuffledOptions[index];
+    });
+    hintBtn.classList.remove('hidden');
+    updateProgressBar();
+    startTimer();
+}
+
         function moveToNextQuestion(delay = 0) { setTimeout(() => { currentQuestionIndex++; if (currentQuestionIndex < currentQuizData.length) { showQuestion(); } else { showResult(); } }, delay); }
         function updateProgressBar() { const progress = ((currentQuestionIndex + 1) / currentQuizData.length) * 100; progressBar.style.width = `${progress}%`; }
         function showResult() { quizScreen.classList.add('hidden'); resultScreen.classList.remove('hidden'); scoreText.innerHTML = `총 <strong>${currentQuizData.length}</strong> 문제 중 <strong>${score}</strong>개를 맞혔습니다!`; if (incorrectAnswersThisRound.length > 0) { incorrectSection.classList.remove('hidden'); retryIncorrectBtn.classList.remove('hidden'); incorrectList.innerHTML = ''; incorrectAnswersThisRound.forEach(item => { const li = document.createElement('li'); li.innerHTML = `<strong>${item.answer}</strong>: ${item.question}`; incorrectList.appendChild(li); }); } else { incorrectSection.classList.add('hidden'); retryIncorrectBtn.classList.add('hidden'); scoreText.innerHTML += "<br>🎉 <strong>완벽해요!</strong>"; if (currentQuizData.length >= 10 && !userData.achievements.includes('perfect10')) { showAchievement('🏆 도전 과제: 10문제 이상 완벽 클리어!'); userData.achievements.push('perfect10'); } } saveUserData(); updateDashboard(); }
