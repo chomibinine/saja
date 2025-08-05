@@ -742,22 +742,23 @@ body {
 <i class="fas fa-chevron-down"></i>
 </div>
 <div class="accordion-content" style="display:none; ...">
-<div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
-<select id="user-select" style="flex:1;"></select>
-<button class="primary-btn" id="add-user-btn" style="width:40px; padding:8px 0;">+</button>
-<button class="primary-btn" id="delete-user-btn" style="width:40px; padding:8px 0;">-</button>
-</div>
-<div id="add-user-prompt" style="display: none; margin-top: 10px; background: #fff; padding: 15px; border-radius: 8px;">
-<p style="margin-bottom: 8px; font-size: 0.9rem; color: #333;">새 사용자 이름 (최대 8자):</p>
-<input id="new-username-input" maxlength="8" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;" type="text"/>
-<div style="display: flex; gap: 8px; margin-top: 10px;">
-<button id="confirm-add-user-btn" style="flex: 1; padding: 8px; border: none; background: #c62828; color: white; border-radius: 4px;">추가</button>
-<button id="cancel-add-user-btn" style="flex: 1; padding: 8px; border: none; background: #ccc; color: white; border-radius: 4px;">취소</button>
-</div>
-</div>
-<div style="text-align:center;">
-<input accept="image/*" id="profile-upload" type="file"/>
-<img id="profile-img" src="" style="width:80px;height:80px;border-radius:50%;display:none;margin-top:10px;"/>
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
+        <select id="user-select" style="flex:1;"></select>
+        <button class="primary-btn" id="add-user-btn" style="width:40px; padding:8px 0;">+</button>
+        <button class="primary-btn" id="delete-user-btn" style="width:40px; padding:8px 0;">-</button>
+    </div>
+    
+    <div id="add-user-prompt" style="display: none; margin-top: 10px; background: #fff; padding: 15px; border-radius: 8px;">
+        <p style="margin-bottom: 8px; font-size: 0.9rem; color: #333;">새 사용자 이름 (최대 8자):</p>
+        <input type="text" id="new-username-input" maxlength="8" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <button id="confirm-add-user-btn" style="flex: 1; padding: 8px; border: none; background: #c62828; color: white; border-radius: 4px;">추가</button>
+            <button id="cancel-add-user-btn" style="flex: 1; padding: 8px; border: none; background: #ccc; color: white; border-radius: 4px;">취소</button>
+        </div>
+    </div>
+    <div style="text-align:center;">
+        <input accept="image/*" id="profile-upload" type="file"/>
+        <img id="profile-img" src="" style="width:80px;height:80px;border-radius:50%;display:none;margin-top:10px;"/>
 </div>
 </div>
 </div>
@@ -874,7 +875,7 @@ document.getElementById("cancel-add-user-btn").onclick = function () {
 </div>
 <h3>퀴즈 범위 선택</h3>
 <div id="quiz-selection" style="max-height: 180px; overflow-y: auto;">
-</div><div id="custom-quiz-selection" style="display:none; margin: 20px 0; background: #f1f3f4; padding: 15px; border-radius: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+    </div><div id="custom-quiz-selection" style="display:none; margin: 20px 0; background: #f1f3f4; padding: 15px; border-radius: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
 <label>퀴즈 범위: <input id="custom-range-start" min="1" style="width: 70px;" type="number" value="1"/> ~ <input id="custom-range-end" min="1" style="width: 70px; margin-left: 10px;" type="number" value="10"/></label>
 <label style="margin-left: 20px; display: inline-block;">문제 수: <input id="custom-question-count" max="20" min="3" style="width: 70px;" type="number" value="5"/></label>
 </div>
@@ -898,6 +899,7 @@ document.getElementById("cancel-add-user-btn").onclick = function () {
 <div id="character-feedback"></div>
 </div><div id="next-btn-wrapper" style="margin: 0; min-height: 80px; display: flex; justify-content: center; align-items: center;">
 <button class="primary-btn hidden" id="next-q-btn">다음 문제</button>
+
 </div>
 </div> <!-- end of #quiz-screen -->
 <div class="hidden" id="result-screen">
@@ -5938,7 +5940,6 @@ if (!autoAdvance && comboCount > 1) {
             hintBtn.classList.add('hidden');
         }
         function openSettings() { populateUserSelect(); settingsModal.classList.remove('hidden'); }
-  loadAllUsers();
         function closeSettings() { settingsModal.classList.add('hidden'); }
         function toggleSound() { soundEnabled = soundToggle.checked; localStorage.setItem('soundEnabled', JSON.stringify(soundEnabled)); }
         function loadSoundSetting() { const savedSoundSetting = localStorage.getItem('soundEnabled'); if (savedSoundSetting !== null) { soundEnabled = JSON.parse(savedSoundSetting); } soundToggle.checked = soundEnabled; }
@@ -5974,12 +5975,7 @@ function addUser() {
     createUser(trimmedUsername);
 }
         function deleteUser() { const username = userSelect.value; if (!username) { showUserMessage('삭제할 사용자를 선택해주세요!'); return; } if (Object.keys(allUsers).length <= 1) { showUserMessage('최소 한 명의 사용자가 필요합니다!'); return; } if (!confirm(`"${username}" 사용자를 정말 삭제하시겠습니까? 모든 학습 데이터가 사라집니다!`)) return; delete allUsers[username]; saveAllUsers(); populateUserSelect(); const firstUserId = Object.keys(allUsers)[0]; if (firstUserId) { setCurrentUser(firstUserId); userSelect.value = firstUserId; showUserMessage(`"${username}" 사용자가 삭제되었습니다.`); } }
-        function populateUserSelect() {
-  const select = document.getElementById("user-select");
-  if (!select) return;
-  while (select.firstChild) {
-    select.removeChild(select.firstChild);
-  } userSelect.innerHTML = ''; Object.keys(allUsers).forEach(username => { const option = document.createElement('option'); option.value = username; option.textContent = username; userSelect.appendChild(option); }); if (currentUserId) userSelect.value = currentUserId; }
+        function populateUserSelect() { userSelect.innerHTML = ''; Object.keys(allUsers).forEach(username => { const option = document.createElement('option'); option.value = username; option.textContent = username; userSelect.appendChild(option); }); if (currentUserId) userSelect.value = currentUserId; }
         function setCurrentUser(username) {
     if (!allUsers[username]) return;
     currentUserId = username;
@@ -6196,7 +6192,8 @@ function speakWord(word) {
         utterance.rate = 0.9;
         speechSynthesis.speak(utterance);
     }
-}</script>
+}
+</script>
 <script>
 function updateProgressFromText() {
     const progressDisplay = document.getElementById("progress-display");
@@ -6246,6 +6243,7 @@ if (userData[currentUserId]) {
   document.getElementById("progress-percent").textContent = ` (${(correct / 1000 * 100).toFixed(1)}%)`;
 }
 </script>
+
 <script>
 // ✅ TTS 발음 재생 함수
 function speak(text) {
@@ -6260,6 +6258,8 @@ function speak(text) {
   }
 }
 </script>
+
+
 <script>
 // ✅ 문제 텍스트와 발음 버튼을 함께 표시하는 함수
 function showQuestionWithTTS(word) {
@@ -6267,207 +6267,6 @@ function showQuestionWithTTS(word) {
   questionText.innerHTML = `${word} <button onclick="speak('${word}')" style="margin-left: 10px;">🔊</button>`;
 }
 </script>
-<script>
-function addUser() {
-  document.getElementById("add-user-prompt").style.display = "block";
-}
 
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById("confirm-add-user-btn").onclick = function () {
-    const newName = document.getElementById("new-username-input").value.trim();
-    if (newName.length > 0 && newName.length <= 8) {
-      addNewUser(newName);
-      document.getElementById("add-user-prompt").style.display = "none";
-    }
-  };
-
-  document.getElementById("cancel-add-user-btn").onclick = function () {
-    document.getElementById("add-user-prompt").style.display = "none";
-  };
-});
-</script><script>
-// 사용자 데이터 초기화
-let userData = {};
-let currentUserId = null;
-
-// 저장된 사용자 불러오기
-document.addEventListener('DOMContentLoaded', function () {
-  const saved = localStorage.getItem("userData");
-  if (saved) {
-    userData = JSON.parse(saved);
-    const userSelect = document.getElementById("user-select");
-    for (const name in userData) {
-      const option = document.createElement("option");
-      option.value = name;
-      option.textContent = name;
-      userSelect.appendChild(option);
-    }
-  }
-});
-
-function addNewUser(name) {
-  if (!userData[name]) {
-    userData[name] = {
-      correct: [],
-      correctCount: 0
-    };
-  }
-  currentUserId = name;
-
-  const userSelect = document.getElementById("user-select");
-  const optionExists = [...userSelect.options].some(opt => opt.value === name);
-  if (!optionExists) {
-    const option = document.createElement("option");
-    option.value = name;
-    option.textContent = name;
-    userSelect.appendChild(option);
-  }
-
-  userSelect.value = name;
-
-  // 로컬스토리지에 저장
-  localStorage.setItem("userData", JSON.stringify(userData));
-
-  const msg = document.getElementById("user-message");
-  msg.textContent = `${name} 님이 선택되었습니다!`;
-  msg.classList.add("show");
-  setTimeout(() => msg.classList.remove("show"), 2000);
-}
-</script><script>
-function addNewUser(name) {
-    const userSelect = document.getElementById("user-select");
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    if (users.includes(name)) {
-        alert("이미 존재하는 사용자입니다.");
-        return;
-    }
-
-    users.push(name);
-    localStorage.setItem("users", JSON.stringify(users));
-
-    const option = document.createElement("option");
-    option.value = name;
-    option.textContent = name;
-    userSelect.appendChild(option);
-    userSelect.value = name;
-
-    const msg = document.getElementById("user-message");
-    msg.textContent = `${name}님이 추가되었습니다!`;
-    msg.classList.add("show");
-    setTimeout(() => msg.classList.remove("show"), 2000);
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-    const userSelect = document.getElementById("user-select");
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    users.forEach(name => {
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        userSelect.appendChild(option);
-    });
-});
-</script><script>
-    const userSelect = document.getElementById("user-select");
-    const addUserBtn = document.getElementById("add-user-btn");
-
-    let allUsers = {};
-    let currentUserId = null;
-
-    function saveAllUsers() {
-      localStorage.setItem('wordMasterUsers', JSON.stringify(allUsers));
-    }
-
-    function loadAllUsers() {
-      const savedUsers = localStorage.getItem('wordMasterUsers');
-      if (savedUsers) {
-        allUsers = JSON.parse(savedUsers);
-      } else {
-        createUser('초미비니');
-        saveAllUsers();
-      }
-    }
-
-    function populateUserSelect() {
-  const select = document.getElementById("user-select");
-  if (!select) return;
-  while (select.firstChild) {
-    select.removeChild(select.firstChild);
-  }
-      userSelect.innerHTML = '';
-      Object.keys(allUsers).forEach(username => {
-        const option = document.createElement('option');
-        option.value = username;
-        option.textContent = username;
-        userSelect.appendChild(option);
-      });
-
-      if (currentUserId && allUsers[currentUserId]) {
-        userSelect.value = currentUserId;
-      }
-    }
-
-    function setCurrentUser(username) {
-      currentUserId = username;
-      userSelect.value = username;
-      // 이후 사용자별 데이터 로딩/저장용으로 확장 가능
-    }
-
-    function showUserMessage(msg) {
-      alert(msg);  // 간단 메시지 처리
-    }
-
-    function createUser(username) {
-      username = username?.trim() || '초미비니';
-
-      if (allUsers[username]) {
-        showUserMessage('이미 존재하는 사용자입니다!');
-        return false;
-      }
-
-      allUsers[username] = {
-        level: 1,
-        xp: 0,
-        masteredWords: [],
-        incorrectNote: [],
-        achievements: [],
-        profileImage: null
-      };
-
-      saveAllUsers();
-      populateUserSelect();
-      setCurrentUser(username);
-      showUserMessage(`"${username}" 사용자가 생성되었습니다!`);
-      return true;
-    }
-
-    function addUser() {
-      const newUsername = prompt('새 사용자 이름을 입력하세요 (최대 8자):', '새 사용자');
-      if (!newUsername || newUsername.trim() === '') return;
-
-      const trimmedUsername = newUsername.trim();
-      if (trimmedUsername.length > 8) {
-        showUserMessage('사용자 이름은 최대 8자까지 가능합니다.');
-        return;
-      }
-
-      createUser(trimmedUsername);
-    }
-
-    addUserBtn.addEventListener('click', addUser);
-    userSelect.addEventListener('change', function () {
-      setCurrentUser(this.value);
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-      loadAllUsers();
-      populateUserSelect();
-      const firstUser = Object.keys(allUsers)[0];
-      if (firstUser) {
-        setCurrentUser(firstUser);
-      }
-    });
-  </script></body>
+</body>
 </html>
